@@ -83,9 +83,30 @@ function MediaPickerButton({
 
       {/* Uploading indicator */}
       {uploadState === UPLOAD_STATE.UPLOADING && (
-        <div className="flex flex-col items-center justify-center w-full h-full absolute inset-0 bg-black/60 z-10 animate-pulse">
-          <div className="w-4 h-4 rounded-full border border-primary/30 border-t-primary animate-spin mb-0.5" />
-          <span className="text-xs font-black text-primary">
+        <div className="flex flex-col items-center justify-center w-full h-full absolute inset-0 bg-black/80 z-20 backdrop-blur-[2px]">
+          <svg className="w-8 h-8 -rotate-90">
+            <circle
+              cx="16"
+              cy="16"
+              r="14"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="transparent"
+              className="text-white/10"
+            />
+            <circle
+              cx="16"
+              cy="16"
+              r="14"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="transparent"
+              strokeDasharray={88}
+              strokeDashoffset={88 - (88 * progress) / 100}
+              className="text-primary transition-all duration-300"
+            />
+          </svg>
+          <span className="absolute text-[9px] font-black text-primary leading-none">
             {progress}%
           </span>
         </div>
@@ -93,7 +114,7 @@ function MediaPickerButton({
 
       {/* Ready state */}
       {uploadState === UPLOAD_STATE.READY && (
-        <div className="flex flex-col items-center justify-center gap-1 w-full h-full absolute inset-0 bg-primary/10 rounded-full">
+        <div className="flex flex-col items-center justify-center gap-1 w-full h-full absolute inset-0 bg-primary/10 rounded-full group-hover:bg-primary/20 transition-all">
           {previewUrl ? (
             isVideo ? (
               <video
@@ -109,9 +130,16 @@ function MediaPickerButton({
               />
             )
           ) : (
-            <>
-              {icon}
-            </>
+            <div className="flex flex-col items-center justify-center w-full px-1">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" className="text-primary mb-0.5">
+                <path d="M9 18V5l12-2v13" />
+                <circle cx="6" cy="18" r="3" />
+                <circle cx="18" cy="16" r="3" />
+              </svg>
+              <span className="text-[7px] font-black text-primary uppercase truncate w-full text-center">
+                {fileName?.split('.').pop() || "AUD"}
+              </span>
+            </div>
           )}
         </div>
       )}
@@ -291,6 +319,8 @@ export default function LipSyncStudio({
   apiKey,
   onGenerationComplete,
   historyItems,
+  droppedFiles,
+  onFilesHandled,
 }) {
   const PERSIST_KEY = "hg_lipsync_studio_persistent";
 
@@ -512,6 +542,26 @@ export default function LipSyncStudio({
     },
     [apiKey],
   );
+
+  // ── Handle Dropped Files ────────────────────────────────────────────────
+  useEffect(() => {
+    if (droppedFiles && droppedFiles.length > 0) {
+      const imageFiles = droppedFiles.filter(f => f.type.startsWith('image/'));
+      const videoFiles = droppedFiles.filter(f => f.type.startsWith('video/'));
+      const audioFiles = droppedFiles.filter(f => f.type.startsWith('audio/'));
+      
+      if (audioFiles.length > 0) {
+        handleAudioPick(audioFiles[0]);
+      } else if (videoFiles.length > 0) {
+        switchToVideo();
+        handleVideoPick(videoFiles[0]);
+      } else if (imageFiles.length > 0) {
+        switchToImage();
+        handleImageUpload(imageFiles[0]);
+      }
+      onFilesHandled?.();
+    }
+  }, [droppedFiles, onFilesHandled, handleAudioPick, handleVideoPick, handleImageUpload]);
 
   // ── Mode toggle ─────────────────────────────────────────────────────────
   const switchToImage = () => {

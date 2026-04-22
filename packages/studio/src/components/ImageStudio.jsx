@@ -242,9 +242,30 @@ function UploadButton({ apiKey, maxImages, onSelect, onClear, initialUrls = [] }
     let badge;
     if (uploading && !hasSelection) {
       badge = (
-        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 z-10">
-          <div className="w-4 h-4 rounded-full border border-primary/30 border-t-primary animate-spin mb-0.5" />
-          <span className="text-[8px] font-black text-primary">
+        <div className="flex flex-col items-center justify-center w-full h-full absolute inset-0 bg-black/80 z-20 backdrop-blur-[2px]">
+          <svg className="w-8 h-8 -rotate-90">
+            <circle
+              cx="16"
+              cy="16"
+              r="14"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="transparent"
+              className="text-white/10"
+            />
+            <circle
+              cx="16"
+              cy="16"
+              r="14"
+              stroke="currentColor"
+              strokeWidth="2"
+              fill="transparent"
+              strokeDasharray={88}
+              strokeDashoffset={88 - (88 * lastUploadProgress) / 100}
+              className="text-primary transition-all duration-300"
+            />
+          </svg>
+          <span className="absolute text-[9px] font-black text-primary leading-none">
             {lastUploadProgress}%
           </span>
         </div>
@@ -718,6 +739,8 @@ export default function ImageStudio({
   apiKey,
   onGenerationComplete,
   historyItems,
+  droppedFiles,
+  onFilesHandled,
 }) {
   const PERSIST_KEY = "hg_image_studio_persistent";
 
@@ -822,6 +845,54 @@ export default function ImageStudio({
     uploadedImageUrls,
     localHistory,
   ]);
+
+  const processDroppedImages = async (files) => {
+    const MAX_IMAGE_SIZE = 10 * 1024 * 1024; // 10MB
+    const tooLarge = files.filter((f) => f.size > MAX_IMAGE_SIZE);
+    if (tooLarge.length > 0) {
+      alert(
+        `The following images are too large (max 10MB): ${tooLarge.map((f) => f.name).join(", ")}`
+      );
+      return;
+    }
+
+    setGenerating(true); // Show as generating/busy
+    try {
+      const toUpload =
+        maxImages === 1 ? files.slice(0, 1) : files.slice(0, maxImages);
+      const urls = await Promise.all(
+        toUpload.map(async (file) => {
+          try {
+            return await uploadFile(apiKey, file);
+          } catch (err) {
+            console.error(
+              "[ImageStudio] Drop upload failed for",
+              file.name,
+              err
+            );
+            throw err;
+          }
+        })
+      );
+
+      handleUploadSelect({ urls });
+    } catch (err) {
+      alert(`Image upload failed: ${err.message}`);
+    } finally {
+      setGenerating(false);
+    }
+  };
+
+  // ── Handle Dropped Files ────────────────────────────────────────────────
+  useEffect(() => {
+    if (droppedFiles && droppedFiles.length > 0) {
+      const imageFiles = droppedFiles.filter(f => f.type.startsWith('image/'));
+      if (imageFiles.length > 0) {
+        processDroppedImages(imageFiles);
+      }
+      onFilesHandled?.();
+    }
+  }, [droppedFiles, onFilesHandled, processDroppedImages]);
 
   // ── Derived: current model lists & helpers ───────────────────────────────
   const currentModels = imageMode ? i2iModels : t2iModels;

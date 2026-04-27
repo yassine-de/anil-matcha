@@ -34,10 +34,10 @@ One-click installers — no Node.js or terminal required.
 
 | Platform | Download |
 |---|---|
-| macOS Apple Silicon (M1/M2/M3/M4) | [Open Generative AI-1.0.7-arm64.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.7/Open.Generative.AI-1.0.7-arm64.dmg) |
-| macOS Intel (x64) | [Open Generative AI-1.0.7.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.7/Open.Generative.AI-1.0.7.dmg) |
-| Windows (x64) | [Open Generative AI Setup 1.0.8.exe](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.8/Open.Generative.AI.Setup.1.0.8.exe) |
-| Linux (Ubuntu x64) | See [v1.0.6 release](https://github.com/Anil-matcha/Open-Generative-AI/releases/tag/v1.0.6) for `.AppImage` and `.deb`, or build locally with `npm run electron:build:linux`. |
+| macOS Apple Silicon (M1/M2/M3/M4) | [Open Generative AI-1.0.9-arm64.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI-1.0.9-arm64.dmg) |
+| macOS Intel (x64) | [Open Generative AI-1.0.9.dmg](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI-1.0.9.dmg) |
+| Windows (x64) | [Open Generative AI Setup 1.0.9.exe](https://github.com/Anil-matcha/Open-Generative-AI/releases/download/v1.0.9/Open.Generative.AI.Setup.1.0.9.exe) |
+| Linux (Ubuntu x64) | [v1.0.9 release](https://github.com/Anil-matcha/Open-Generative-AI/releases/tag/v1.0.9) (`.AppImage` / `.deb`), or build locally with `npm run electron:build:linux`. |
 
 All releases: [github.com/Anil-matcha/Open-Generative-AI/releases](https://github.com/Anil-matcha/Open-Generative-AI/releases)
 

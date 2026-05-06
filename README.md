@@ -12,7 +12,7 @@
 
 > **Open-source Opus Clip alternative — turn any long-form YouTube video into viral-ready vertical shorts** -> https://github.com/SamurAIGPT/AI-Youtube-Shorts-Generator
 
-> **Open-source multi-modal chatbot and Poe alternative** -> https://github.com/Anil-matcha/Open-Poe-AI
+> **Open-source Lovart AI alternative, an AI design agent** -> https://github.com/Anil-matcha/Open-Lovart
 
 ## 🌐 Try it Online — No Install Required
 

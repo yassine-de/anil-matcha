@@ -1,4 +1,4 @@
-# Open Generative AI — Uncensored Open-Source Alternative to AI Video Platforms
+# Open Generative AI — Unrestricted Open-Source Alternative to AI Video Platforms
 
 > **The free, open-source, unrestricted alternative to AI Video Platforms.** Generate AI images and videos using 200+ state-of-the-art models — no content filters, no closed ecosystem, no subscription fees.
 
@@ -109,10 +109,10 @@ echo 'kernel.apparmor_restrict_unprivileged_userns=0' | sudo tee /etc/sysctl.d/9
 
 ---
 
-Open Generative AI is a free, uncensored, open-source AI image, video, cinema, and lip sync studio that brings unrestricted creative workflows to everyone. No content filters, no prompt rejections, no guardrails — just full creative freedom. Powered by [Muapi.ai](https://muapi.ai), it supports text-to-image, image-to-image, text-to-video, image-to-video, and audio-driven lip sync generation across models like Flux, Nano Banana, Midjourney, Kling, Sora, Veo, Seedream, Infinite Talk, LTX Lipsync, Wan 2.2, and more — all from a sleek, modern interface you can self-host and customize.
+Open Generative AI is a free, unrestricted, open-source AI image, video, cinema, and lip sync studio that brings unrestricted creative workflows to everyone. No content filters, no prompt rejections, no guardrails — just full creative freedom. Powered by [Muapi.ai](https://muapi.ai), it supports text-to-image, image-to-image, text-to-video, image-to-video, and audio-driven lip sync generation across models like Flux, Nano Banana, Midjourney, Kling, Sora, Veo, Seedream, Infinite Talk, LTX Lipsync, Wan 2.2, and more — all from a sleek, modern interface you can self-host and customize.
 
 **Why Open Generative AI instead of other AI Video Platforms?**
-- **Uncensored & unrestricted** — no content filters, no nanny guardrails, no prompt rejections
+- **Unrestricted** — no content filters, no nanny guardrails, no prompt rejections
 - **Free & open-source** — no subscription, no vendor lock-in
 - **Self-hosted** — your data stays on your machine, full creative control
 - **200+ models** — text-to-image, image-to-image, text-to-video, image-to-video, lip sync
@@ -512,7 +512,7 @@ Lip sync jobs use the same two-step pattern: a dedicated `processLipSync()` meth
 | | Other providers | Open Generative AI |
 | :--- | :--- | :--- |
 | **Cost** | Subscription-based | Free (open-source) |
-| **Content filters** | Yes — prompts blocked or altered | None — fully uncensored |
+| **Content filters** | Yes — prompts blocked or altered | None — fully unrestricted |
 | **Restrictions** | Platform guardrails enforced | Unrestricted creative freedom |
 | **Models** | Proprietary | 200+ open & commercial models |
 | **Multi-image input** | Limited | Up to 14 images per request |
@@ -535,4 +535,4 @@ Built with [Muapi.ai](https://muapi.ai) — the unified API for AI image and vid
 **Deep Dive**: For more details on the "AI Influencer" engine, upcoming "Popcorn" storyboarding features, and the future of this project, read the [full technical overview](https://medium.com/@anilmatcha/).
 
 ---
-*Looking for a free, uncensored AI Video Plaform? Open Generative AI is an open-source, unrestricted AI image and video generation studio — with no content filters that you can self-host, customize, and extend.*
+*Looking for a free, unrestricted AI Video Plaform? Open Generative AI is an open-source, unrestricted AI image and video generation studio — with no content filters that you can self-host, customize, and extend.*

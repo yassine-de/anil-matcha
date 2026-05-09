@@ -122,8 +122,6 @@ Open Generative AI is a free, unrestricted, open-source AI image, video, cinema,
 
 For a deep dive into the technical architecture and the philosophy behind the "Infinite Budget" cinema workflow, see our [comprehensive guide and roadmap](https://medium.com/@anilmatcha/).
 
-![Studio Demo](docs/assets/studio_demo.webp)
-
 ## ⚡ Local Model Inference (Desktop App Only)
 
 The desktop app supports **two independent local engines**. Pick whichever fits the machine you actually run on:

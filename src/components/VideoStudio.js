@@ -183,8 +183,8 @@ export function VideoStudio() {
         anchorContainer: container,
         onSelect: ({ url }) => { uploadedEndImageUrl = url; },
         onClear: () => { uploadedEndImageUrl = null; },
-        uploadFn: (file) => muapi.uploadFile(file),
-        requireApiKey: () => true,
+        uploadFn: (file) => isWan2gpModelId(selectedModel) ? localAI.uploadFileToWan2gp(file) : muapi.uploadFile(file),
+        requireApiKey: () => !isWan2gpModelId(selectedModel),
     });
     endPicker.trigger.title = 'End frame (optional)';
     // Visual marker: small "L" badge in the corner so users can tell the two

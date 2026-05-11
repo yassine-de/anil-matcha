@@ -12,6 +12,8 @@
 
 > **Open-source AI Clipping — turn any long-form YouTube video into viral-ready vertical shorts** -> https://github.com/SamurAIGPT/AI-Youtube-Shorts-Generator
 
+> **Open-source AI Design Agent** -> https://github.com/Anil-matcha/Open-AI-Design-Agent 
+
 ## 🌐 Try it Online — No Install Required
 
 **Hosted version:** [https://dev.muapi.ai/open-generative-ai](https://dev.muapi.ai/open-generative-ai)

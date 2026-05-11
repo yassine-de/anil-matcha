@@ -1,6 +1,11 @@
 import { getModelById, getVideoModelById, getI2IModelById, getI2VModelById, getV2VModelById, getLipSyncModelById } from './models.js';
 
-const BASE_URL = 'https://api.muapi.ai';
+// In an http(s) browser we route through the host app's proxy (Next.js routes
+// under /api/* re-issue the call server-side) so api.muapi.ai CORS is bypassed.
+// SSR (no window) and Electron's file:// renderer call the upstream directly.
+const BASE_URL = (typeof window !== 'undefined' && window.location?.protocol?.startsWith('http'))
+    ? '/api'
+    : 'https://api.muapi.ai';
 const PROXY_WF_BASE = '/api/workflow';
 
 async function pollForResult(requestId, key, maxAttempts = 900, interval = 2000) {

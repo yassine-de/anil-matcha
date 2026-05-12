@@ -12,6 +12,8 @@ import {
   getResolutionsForI2IModel,
   getQualityFieldForI2IModel,
   getMaxImagesForI2IModel,
+  getEffectsForI2IModel,
+  getDefaultEffectForI2IModel,
 } from "../models.js";
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -755,6 +757,7 @@ export default function ImageStudio({
     const resolutions = getResolutionsForModel(t2iModels[0].id);
     return resolutions[0] || null;
   });
+  const [selectedEffect, setSelectedEffect] = useState("");
   const [maxImages, setMaxImages] = useState(1);
 
   // ── Prompt / upload state ───────────────────────────────────────────────
@@ -804,6 +807,7 @@ export default function ImageStudio({
         if (data.selectedModelName) setSelectedModelName(data.selectedModelName);
         if (data.selectedAr) setSelectedAr(data.selectedAr);
         if (data.selectedQuality) setSelectedQuality(data.selectedQuality);
+        if (data.selectedEffect) setSelectedEffect(data.selectedEffect);
         if (data.maxImages) setMaxImages(data.maxImages);
         if (data.prompt) setPrompt(data.prompt);
         if (data.uploadedImageUrls) setUploadedImageUrls(data.uploadedImageUrls);
@@ -833,6 +837,7 @@ export default function ImageStudio({
           selectedModelName,
           selectedAr,
           selectedQuality,
+          selectedEffect,
           maxImages,
           prompt,
           uploadedImageUrls,
@@ -851,6 +856,7 @@ export default function ImageStudio({
     selectedModelName,
     selectedAr,
     selectedQuality,
+    selectedEffect,
     maxImages,
     prompt,
     uploadedImageUrls,
@@ -918,6 +924,8 @@ export default function ImageStudio({
     ? getQualityFieldForI2IModel(selectedModelId)
     : getQualityFieldForModel(selectedModelId);
   const showQualityBtn = currentResolutions.length > 0;
+  const currentEffects = imageMode ? getEffectsForI2IModel(selectedModelId) : [];
+  const showEffectBtn = currentEffects.length > 0;
 
   // ── Textarea auto-resize ─────────────────────────────────────────────────
   const handleTextareaInput = () => {
@@ -938,11 +946,13 @@ export default function ImageStudio({
         const firstI2I = i2iModels[0];
         const ars = getAspectRatiosForI2IModel(firstI2I.id);
         const resolutions = getResolutionsForI2IModel(firstI2I.id);
+        const effects = getEffectsForI2IModel(firstI2I.id);
         setImageMode(true);
         setSelectedModelId(firstI2I.id);
         setSelectedModelName(firstI2I.name);
         setSelectedAr(ars[0] || "1:1");
         setSelectedQuality(resolutions[0] || null);
+        setSelectedEffect(effects.length > 0 ? (getDefaultEffectForI2IModel(firstI2I.id) || effects[0]) : "");
         setMaxImages(getMaxImagesForI2IModel(firstI2I.id));
       }
     },
@@ -959,6 +969,7 @@ export default function ImageStudio({
     setSelectedModelName(firstT2I.name);
     setSelectedAr(ars[0] || "1:1");
     setSelectedQuality(resolutions[0] || null);
+    setSelectedEffect("");
     setMaxImages(1);
   }, []);
 
@@ -974,7 +985,13 @@ export default function ImageStudio({
     setSelectedModelName(m.name);
     setSelectedAr(ars[0] || "1:1");
     setSelectedQuality(resolutions[0] || null);
-    if (imageMode) setMaxImages(getMaxImagesForI2IModel(m.id));
+    if (imageMode) {
+      setMaxImages(getMaxImagesForI2IModel(m.id));
+      const effects = getEffectsForI2IModel(m.id);
+      setSelectedEffect(effects.length > 0 ? (getDefaultEffectForI2IModel(m.id) || effects[0]) : "");
+    } else {
+      setSelectedEffect("");
+    }
   };
 
   // ── History helpers ──────────────────────────────────────────────────────
@@ -1003,6 +1020,7 @@ export default function ImageStudio({
     setSelectedModelName(firstT2I.name);
     setSelectedAr(ars[0] || "1:1");
     setSelectedQuality(resolutions[0] || null);
+    setSelectedEffect("");
     setMaxImages(1);
   };
 
@@ -1039,6 +1057,7 @@ export default function ImageStudio({
             if (currentQualityField && selectedQuality) {
               genParams[currentQualityField] = selectedQuality;
             }
+            if (showEffectBtn && selectedEffect) genParams.name = selectedEffect;
             return await generateI2I(apiKey, genParams);
           } else {
             const genParams = {
@@ -1334,6 +1353,42 @@ export default function ImageStudio({
                         options={currentResolutions}
                         selected={selectedQuality}
                         onSelect={(val) => setSelectedQuality(val)}
+                        onClose={() => setDropdownOpen(null)}
+                      />
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Effect type button */}
+              {showEffectBtn && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDropdownOpen((o) => (o === "effect" ? null : "effect"));
+                    }}
+                    className="flex items-center gap-2 px-3 py-2 bg-white/[0.03] hover:bg-white/[0.06] rounded-md transition-all border border-white/[0.03] group whitespace-nowrap"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="opacity-40 text-white">
+                      <path d="M5 3l14 9-14 9V3z" />
+                    </svg>
+                    <span className="text-[11px] font-semibold text-white/70 group-hover:text-[#22d3ee] transition-colors max-w-[140px] truncate">
+                      {selectedEffect || "Effect"}
+                    </span>
+                  </button>
+
+                  {dropdownOpen === "effect" && (
+                    <div
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute bottom-[calc(100%+12px)] left-0 z-50 bg-[#0a0a0a] rounded-md p-3 max-h-[40vh] overflow-y-auto custom-scrollbar shadow-2xl border border-white/[0.05] min-w-[200px]"
+                    >
+                      <SimpleDropdown
+                        title="Effect Type"
+                        options={currentEffects}
+                        selected={selectedEffect}
+                        onSelect={(val) => setSelectedEffect(val)}
                         onClose={() => setDropdownOpen(null)}
                       />
                     </div>

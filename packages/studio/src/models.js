@@ -7825,6 +7825,17 @@ export const getResolutionsForI2VModel = (modelId) => {
     return [];
 };
 
+// Effect-style models declare `inputs.name` as an enum of effect types.
+export const getEffectsForI2VModel = (modelId) => {
+    const model = getI2VModelById(modelId);
+    return model?.inputs?.name?.enum || [];
+};
+
+export const getDefaultEffectForI2VModel = (modelId) => {
+    const model = getI2VModelById(modelId);
+    return model?.inputs?.name?.default || null;
+};
+
 export const getModesForModel = (modelId) => {
     const model = [...t2vModels, ...i2vModels].find(m => m.id === modelId);
     if (!model) return [];
@@ -7839,6 +7850,16 @@ export const getResolutionsForI2IModel = (modelId) => {
     if (model.inputs?.resolution?.enum) return model.inputs.resolution.enum;
     if (model.inputs?.quality?.enum) return model.inputs.quality.enum;
     return [];
+};
+
+export const getEffectsForI2IModel = (modelId) => {
+    const model = getI2IModelById(modelId);
+    return model?.inputs?.name?.enum || [];
+};
+
+export const getDefaultEffectForI2IModel = (modelId) => {
+    const model = getI2IModelById(modelId);
+    return model?.inputs?.name?.default || null;
 };
 
 // Returns the payload field name for quality/resolution for a t2i model ('resolution', 'quality', or null)

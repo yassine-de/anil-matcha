@@ -85,6 +85,9 @@ export async function generateI2I(apiKey, params) {
     if (params.aspect_ratio) payload.aspect_ratio = params.aspect_ratio;
     if (params.resolution) payload.resolution = params.resolution;
     if (params.quality) payload.quality = params.quality;
+    if (modelInfo?.inputs?.name) {
+        payload.name = params.name || modelInfo.inputs.name.default;
+    }
     return submitAndPoll(endpoint, payload, apiKey, params.onRequestId, 60);
 }
 
@@ -121,6 +124,9 @@ export async function generateI2V(apiKey, params) {
     if (params.resolution) payload.resolution = params.resolution;
     if (params.quality) payload.quality = params.quality;
     if (params.mode) payload.mode = params.mode;
+    if (modelInfo?.inputs?.name) {
+        payload.name = params.name || modelInfo.inputs.name.default;
+    }
     return submitAndPoll(endpoint, payload, apiKey, params.onRequestId, 900);
 }
 

@@ -12,6 +12,8 @@ import {
   getAspectRatiosForI2VModel,
   getDurationsForI2VModel,
   getResolutionsForI2VModel,
+  getEffectsForI2VModel,
+  getDefaultEffectForI2VModel,
   getModesForModel,
 } from "../models.js";
 
@@ -261,6 +263,7 @@ export default function VideoStudio({
     defaultModel.inputs?.quality?.default || "",
   );
   const [selectedMode, setSelectedMode] = useState("");
+  const [selectedEffect, setSelectedEffect] = useState("");
 
   // ── upload progress ──
   const [imageProgress, setImageProgress] = useState(0);
@@ -272,6 +275,7 @@ export default function VideoStudio({
   const [showResolution, setShowResolution] = useState(false);
   const [showQuality, setShowQuality] = useState(false);
   const [showMode, setShowMode] = useState(false);
+  const [showEffect, setShowEffect] = useState(false);
 
   // ── uploads ──
   const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
@@ -367,6 +371,7 @@ export default function VideoStudio({
         setShowResolution(false);
         setShowQuality(false);
         setShowMode(false);
+        setShowEffect(false);
         return;
       }
 
@@ -420,6 +425,15 @@ export default function VideoStudio({
         setSelectedMode("");
         setShowMode(false);
       }
+
+      const effects = isImageMode ? getEffectsForI2VModel(modelId) : [];
+      if (effects.length > 0) {
+        setSelectedEffect(getDefaultEffectForI2VModel(modelId) || effects[0]);
+        setShowEffect(true);
+      } else {
+        setSelectedEffect("");
+        setShowEffect(false);
+      }
     },
     [],
   );
@@ -439,6 +453,7 @@ export default function VideoStudio({
         if (data.selectedResolution) setSelectedResolution(data.selectedResolution);
         if (data.selectedQuality) setSelectedQuality(data.selectedQuality);
         if (data.selectedMode) setSelectedMode(data.selectedMode);
+        if (data.selectedEffect) setSelectedEffect(data.selectedEffect);
         if (data.uploadedImageUrl) setUploadedImageUrl(data.uploadedImageUrl);
         if (data.uploadedVideoUrl) setUploadedVideoUrl(data.uploadedVideoUrl);
         if (data.uploadedVideoName) setUploadedVideoName(data.uploadedVideoName);
@@ -486,6 +501,7 @@ export default function VideoStudio({
           selectedResolution,
           selectedQuality,
           selectedMode,
+          selectedEffect,
           uploadedImageUrl,
           uploadedVideoUrl,
           uploadedVideoName,
@@ -508,6 +524,7 @@ export default function VideoStudio({
     selectedResolution,
     selectedQuality,
     selectedMode,
+    selectedEffect,
     uploadedImageUrl,
     uploadedVideoUrl,
     uploadedVideoName,
@@ -915,6 +932,7 @@ export default function VideoStudio({
         if (resolutions.length > 0) i2vParams.resolution = selectedResolution;
         if (selectedQuality) i2vParams.quality = selectedQuality;
         if (selectedMode) i2vParams.mode = selectedMode;
+        if (showEffect && selectedEffect) i2vParams.name = selectedEffect;
 
         res = await generateI2V(apiKey, i2vParams);
         if (!res?.url) throw new Error("No video URL returned by API");
@@ -1015,6 +1033,8 @@ export default function VideoStudio({
     selectedResolution,
     selectedQuality,
     selectedMode,
+    selectedEffect,
+    showEffect,
     uploadedImageUrl,
     uploadedVideoUrl,
     lastGenerationId,
@@ -1560,6 +1580,61 @@ export default function VideoStudio({
                               {r}
                             </span>
                             {selectedAr === r && <CheckSvg />}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* Effect btn */}
+              {showEffect && (
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={toggleDropdown("effect")}
+                    className="flex items-center gap-2 px-3 py-2 bg-white/[0.03] hover:bg-white/[0.06] rounded-md transition-all border border-white/[0.03] group whitespace-nowrap"
+                  >
+                    <svg
+                      width="14"
+                      height="14"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="opacity-40 text-white"
+                    >
+                      <path d="M5 3l14 9-14 9V3z" />
+                    </svg>
+                    <span className="text-[11px] font-semibold text-white/70 group-hover:text-[#22d3ee] transition-colors max-w-[140px] truncate">
+                      {selectedEffect || "Effect"}
+                    </span>
+                  </button>
+                  {openDropdown === "effect" && (
+                    <div
+                      ref={dropdownRef}
+                      onClick={(e) => e.stopPropagation()}
+                      className="absolute bottom-[calc(100%+12px)] left-0 z-50 bg-[#0a0a0a] rounded-lg p-3 shadow-2xl border border-white/[0.05] max-h-80 overflow-y-auto custom-scrollbar min-w-[200px]"
+                    >
+                      <div className="text-xs font-bold text-white/20 border-b border-white/[0.03] mb-2">
+                        Effect Type
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        {getEffectsForI2VModel(selectedModel).map((eff) => (
+                          <div
+                            key={eff}
+                            className="flex items-center justify-between p-2 hover:bg-white/5 rounded cursor-pointer transition-all group/opt"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedEffect(eff);
+                              setOpenDropdown(null);
+                            }}
+                          >
+                            <span className="text-[11px] font-semibold text-white/70 group-hover/opt:text-white">
+                              {eff}
+                            </span>
+                            {selectedEffect === eff && <CheckSvg />}
                           </div>
                         ))}
                       </div>

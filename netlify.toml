@@ -1,9 +1,12 @@
 [build]
-  command = "git submodule update --init --recursive && npm install && npm run build:packages && npm run build"
+  command = "npm run build:packages && npm run build"
   publish = ".next"
 
 [build.environment]
   NODE_VERSION = "20"
+
+[[plugins]]
+  package = "./netlify/plugins/init-submodules"
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

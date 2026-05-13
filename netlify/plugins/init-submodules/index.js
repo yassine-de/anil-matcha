@@ -1,7 +1,7 @@
 const { execSync } = require('child_process')
 
 module.exports = {
-  onPreInstall: async ({ utils }) => {
+  onPreBuild: async ({ utils }) => {
     try {
       execSync('git submodule update --init --recursive', { stdio: 'inherit' })
     } catch (error) {
